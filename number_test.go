@@ -1,7 +1,6 @@
-package tests
+package helper
 
 import (
-	"github.com/freedom-island/go-helper"
 	"slices"
 	"testing"
 )
@@ -20,7 +19,7 @@ func TestRemoveNonDigits(t *testing.T) {
 		"C8": "8",
 	}
 	for k, v := range assertArr {
-		result := go_helper.RemoveNonDigits(k)
+		result := RemoveNonDigits(k)
 		var expected = v
 
 		compareIntArr(t, expected, result)
@@ -38,19 +37,19 @@ func TestRemoveSingleChinese(t *testing.T) {
 
 	k := []string{"1", "寒假", "汉", "5.95"}
 	v := []string{"1", "寒假", "5.95"}
-	result := go_helper.RemoveSingleChinese(k, []string{"买", "卖"})
+	result := RemoveSingleChinese(k, []string{"买", "卖"})
 	var expected = v
 	compareIntArr(t, expected, result)
 
 	k = []string{"1", "处", "开", "寒假", "汉", "5.95"}
 	v = []string{"1", "寒假", "5.95"}
-	result = go_helper.RemoveSingleChinese(k, []string{"买", "卖"})
+	result = RemoveSingleChinese(k, []string{"买", "卖"})
 	expected = v
 	compareIntArr(t, expected, result)
 
 	k = []string{"1", "处", "买", "mai", "寒假", "汉", "5.95"}
 	v = []string{"1", "买", "mai", "寒假", "5.95"}
-	result = go_helper.RemoveSingleChinese(k, []string{"买", "卖"})
+	result = RemoveSingleChinese(k, []string{"买", "卖"})
 	expected = v
 	compareIntArr(t, expected, result)
 }

@@ -1,4 +1,4 @@
-package main
+package helper
 
 import (
 	"golang.org/x/exp/constraints"
