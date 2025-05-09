@@ -1,0 +1,17 @@
+.idea
+.idea/*
+.vscode
+.vscode/*
+.vs
+.vs/*
+tmp/*
+dist*
+vendor/*
+*.exe
+app-amd64
+logfile
+financial-partner
+env-*.json
+*.png
+*.jpg
+*.jpeg
