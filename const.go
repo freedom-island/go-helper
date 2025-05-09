@@ -1,4 +1,4 @@
-package go_helper
+package main
 
 import "errors"
 
