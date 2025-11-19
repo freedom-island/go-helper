@@ -1,10 +1,12 @@
 package helper
 
 import (
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	"regexp"
+	"strings"
 	"unicode"
 )
-
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 // RemoveSingleChar 移除单个字符
 func RemoveSingleChar(input []string, include []string) []string {
@@ -75,6 +77,34 @@ func HasUnicodeText(str string) bool {
 	return false
 }
 
+// SplitNumberAndChinese 拆分数字和汉字结合在一起的情况
+func SplitNumberAndChinese(input string) (number string, chinese string, ok bool) {
+	// 正则表达式匹配：数字开头（可能包含小数），后面跟着中文字符
+	re := regexp.MustCompile(`^([0-9]+\.?[0-9]*)([\p{Han}]+)$`)
+	matches := re.FindStringSubmatch(input)
+
+	if len(matches) != 3 {
+		return "", "", false
+	}
+
+	numberPart := matches[1]
+	chinesePart := matches[2]
+
+	// 检查数字部分是否超过三位数（不包括小数点）
+	digitCount := 0
+	for _, r := range numberPart {
+		if unicode.IsDigit(r) {
+			digitCount++
+		}
+	}
+
+	if digitCount <= 3 {
+		return "", "", false
+	}
+
+	return numberPart, chinesePart, true
+}
+
 // IsComposedOf 检查字符串 s 是否完全由字符 c 构成
 func IsComposedOf(s string, c rune) bool {
 	if len(s) == 0 {
@@ -87,4 +117,31 @@ func IsComposedOf(s string, c rune) bool {
 		}
 	}
 	return true
+}
+
+// FilterNumbers 只保留数字元素（字符串形式的数字）
+func FilterNumbers(arr []string) []string {
+	var result []string
+	numberRegex := regexp.MustCompile(`^-?\d+(\.\d+)?$`)
+
+	for _, item := range arr {
+		if numberRegex.MatchString(item) {
+			result = append(result, item)
+		}
+	}
+	return result
+}
+
+// ToCamelCase 将下划线分隔的名称转换为驼峰式命名
+func ToCamelCase(s string) string {
+	words := strings.Split(s, "_")
+	caser := cases.Title(language.English)
+
+	for i := 1; i < len(words); i++ {
+		if words[i] == "" {
+			continue
+		}
+		words[i] = caser.String(words[i])
+	}
+	return strings.Join(words, "")
 }

@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 // HashPassword 生成安全的哈希化密码
 func HashPassword(password string) string {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
@@ -37,6 +39,15 @@ func NewUUID(size int) string {
 
 // RandomHashId 生成随机的 n 位 hash id
 func RandomHashId(n int) string {
+	id := make([]byte, n)
+	for i := range id {
+		id[i] = letterBytes[rand.IntN(len(letterBytes))]
+	}
+	return string(id)
+}
+
+// RandomHashID 生成随机的 n 位 hash id
+func RandomHashID(n int) string {
 	id := make([]byte, n)
 	for i := range id {
 		id[i] = letterBytes[rand.IntN(len(letterBytes))]

@@ -2,7 +2,6 @@ package helper
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -15,10 +14,8 @@ func RequestGet(url string, getParams string) ([]byte, error) {
 	res, _ := http.DefaultClient.Do(req)
 	defer res.Body.Close()
 
-	body, _ := io.ReadAll(res.Body)
-	fmt.Println(string(body))
-
-	return body, nil
+	body, err := io.ReadAll(res.Body)
+	return body, err
 }
 
 // RequestPost 发起 Post 请求
@@ -35,10 +32,8 @@ func RequestPost(url string, getParams string, requestBody interface{}) ([]byte,
 	res, _ := http.DefaultClient.Do(req)
 	defer res.Body.Close()
 
-	body, _ := io.ReadAll(res.Body)
-	fmt.Println(string(body))
-
-	return body, nil
+	body, err := io.ReadAll(res.Body)
+	return body, err
 }
 
 // RequestDelete 发起 Delete 请求
@@ -48,8 +43,6 @@ func RequestDelete(url string, getParams string) ([]byte, error) {
 	res, _ := http.DefaultClient.Do(req)
 	defer res.Body.Close()
 
-	body, _ := io.ReadAll(res.Body)
-	fmt.Println(string(body))
-
-	return body, nil
+	body, err := io.ReadAll(res.Body)
+	return body, err
 }

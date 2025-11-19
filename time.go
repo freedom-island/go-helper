@@ -4,23 +4,23 @@ import (
 	"time"
 )
 
-// ITimeNowTs 获取当前时间戳
-func ITimeNowTs() int64 {
+// TimeNowTs 获取当前时间戳
+func TimeNowTs() int64 {
 	return time.Now().Unix()
 }
 
-// ITimeZeroTs 获取今日零点时间戳
-func ITimeZeroTs() int64 {
+// TimeZeroTs 获取今日零点时间戳
+func TimeZeroTs() int64 {
 	return time.Now().Unix() / 86400 * 86400
 }
 
-// ITimeZeroCnTs 获取今日零点时间戳（东八时间）
-func ITimeZeroCnTs() int64 {
+// TimeZeroCnTs 获取今日零点时间戳（东八时间）
+func TimeZeroCnTs() int64 {
 	return time.Now().Unix()/86400*86400 - 8*3600
 }
 
-// ITimeArithmeticTs 获取加减运算的时间戳
-func ITimeArithmeticTs(change time.Duration) int64 {
+// TimeArithmeticTs 获取加减运算的时间戳
+func TimeArithmeticTs(change time.Duration) int64 {
 	return time.Now().Add(change).Unix()
 }
 
@@ -39,8 +39,8 @@ func DatetimeResidueSec(dt time.Time) time.Duration {
 	return time.Duration(86400-dt.Unix()%86400) * time.Second
 }
 
-// IGetNextWorkday 获取下一个工作日
-func IGetNextWorkday(dt time.Time) time.Time {
+// GetNextWorkday 获取下一个工作日
+func GetNextWorkday(dt time.Time) time.Time {
 	for {
 		dt = dt.AddDate(0, 0, 1)
 		if dt.Weekday() != time.Saturday && dt.Weekday() != time.Sunday {
@@ -51,8 +51,8 @@ func IGetNextWorkday(dt time.Time) time.Time {
 	return dt
 }
 
-// IGetPrevWorkday 获取上一个工作日
-func IGetPrevWorkday(dt time.Time) time.Time {
+// GetPrevWorkday 获取上一个工作日
+func GetPrevWorkday(dt time.Time) time.Time {
 	for {
 		dt = dt.AddDate(0, 0, -1)
 		if dt.Weekday() != time.Saturday && dt.Weekday() != time.Sunday {

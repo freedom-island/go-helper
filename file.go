@@ -3,10 +3,39 @@ package helper
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/shamaton/msgpack/v2"
+	"io"
 	"os"
 	"sort"
 	"time"
 )
+
+// CopyFile 拷贝文件
+func CopyFile(src, dst string) error {
+	sourceFileStat, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		return fmt.Errorf("%s 非正常文件", src)
+	}
+
+	source, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destination.Close()
+	_, err = io.Copy(destination, source)
+
+	return err
+}
 
 // GetDirFirstLastFile 获取指定文件夹内符合指定格式的最旧与最新文件名
 func GetDirFirstLastFile(format, folderPath string) ([]string, error) {
@@ -46,22 +75,52 @@ func GetDirFirstLastFile(format, folderPath string) ([]string, error) {
 	return []string{matchedFiles[0].Name(), matchedFiles[len(matchedFiles)-1].Name()}, nil
 }
 
-// SaveJsonToFile 保存 JSON 数据到文件
-func SaveJsonToFile(data interface{}, filename string, replace bool) error {
-	filename = fmt.Sprintf("tmp/%s.json", filename)
+// SaveJsonFile 保存为 json 文件
+func SaveJsonFile(data interface{}, filepath, filename string, isAppend bool) error {
+	filename = fmt.Sprintf("%s/%s.json", filepath, filename)
 
 	// 序列化数据
 	serialized, err := json.Marshal(data)
 	if err != nil {
-		return fmt.Errorf("failed to serialize data: %w", err)
+		return fmt.Errorf("failed to serialize testData: %w", err)
 	}
 
 	// 打开文件，追加模式
-	fileStatus := os.O_APPEND | os.O_WRONLY | os.O_CREATE
-	if replace {
-		fileStatus = os.O_CREATE | os.O_RDWR | os.O_TRUNC
+	fileStatus := os.O_CREATE | os.O_RDWR | os.O_TRUNC
+	if isAppend {
+		fileStatus = os.O_APPEND | os.O_WRONLY | os.O_CREATE
 	}
 	file, err := os.OpenFile(filename, fileStatus, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to open file: %w", err)
+	}
+	defer file.Close()
+
+	// 写入实际数据
+	_, err = file.Write(serialized)
+	if err != nil {
+		return fmt.Errorf("failed to write serialized testData: %w", err)
+	}
+
+	return nil
+}
+
+// SaveMsgpackFile 保存为 msgpack 文件
+func SaveMsgpackFile(data interface{}, filepath, filename string, isAppend bool) error {
+	filename = fmt.Sprintf("%s/%s.msgpack", filepath, filename)
+
+	// 序列化数据
+	serialized, err := msgpack.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("failed to serialize data: %w", err)
+	}
+
+	// 打开文件
+	fileFlag := os.O_CREATE | os.O_RDWR | os.O_TRUNC
+	if isAppend {
+		fileFlag = os.O_WRONLY | os.O_CREATE | os.O_APPEND
+	}
+	file, err := os.OpenFile(filename, fileFlag, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to open file: %w", err)
 	}
