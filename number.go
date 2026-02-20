@@ -8,6 +8,13 @@ import (
 	"strings"
 )
 
+// Number 数字泛型
+type Number interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 |
+		~float32 | ~float64
+}
+
 // Avg 求平均值
 func Avg[T constraints.Integer | constraints.Float](inputSlice []T) T {
 	var sum T
@@ -104,4 +111,18 @@ func StringToIntNoErr(text string) int {
 	}
 
 	return parseInt
+}
+
+// Div 安全除数
+func Div[T Number](first T, others ...T) T {
+
+	// 计算除数的乘积
+	for _, num := range others {
+		if num == 0 { // 检查除数是否为 0
+			return 0
+		}
+		first /= num
+	}
+
+	return first
 }

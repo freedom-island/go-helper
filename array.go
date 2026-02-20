@@ -1,3 +1,13 @@
+// Package helper provides utility functions for common operations.
+//
+// This package includes functions for arithmetic operations, string manipulation,
+// and error handling. It strives to be designed to be simple and efficient.
+//
+// Welcome to submit your PR to improve and expand it together.
+//
+// 本辅助工具包，常用作提供简单、中立、高复用可能的实用功能。
+//
+// 该软件包包含算术运算、字符串作和错误处理等功能。它尽力被设计得简单高效。欢迎您提交 PR 来一起改善和拓展它。
 package helper
 
 import (
